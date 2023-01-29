@@ -4,7 +4,11 @@
     <h1 class="text-center mb-5">User Data</h1>
     <div class="row">
       <div class="col-md-5">
-        <form [formGroup]="userForm" class="border p-3 rounded mb-5">
+        <form
+          (ngSubmit)="submitForm()"
+          [formGroup]="userForm"
+          class="border p-3 rounded mb-5"
+        >
           <div class="mb-2">
             <input
               formControlName="name"
@@ -13,6 +17,15 @@
               class="form-control"
               placeholder="Name"
             />
+          </div>
+          <div
+            *ngIf="
+              this.userForm.get('name')?.touched &&
+              this.userForm.get('name')?.errors
+            "
+            class="text-danger mb-2"
+          >
+            Invalid Name
           </div>
           <div class="mb-2">
             <input
@@ -23,6 +36,15 @@
               placeholder="Email ID"
             />
           </div>
+          <div
+            *ngIf="
+              this.userForm.get('email')?.touched &&
+              this.userForm.get('email')?.errors
+            "
+            class="text-danger mb-2"
+          >
+            Invalid Email
+          </div>
           <div class="mb-2">
             <input
               formControlName="mobile"
@@ -32,24 +54,48 @@
               placeholder="Mobile Number"
             />
           </div>
+          <div
+            *ngIf="
+              this.userForm.get('mobile')?.touched &&
+              this.userForm.get('mobile')?.errors
+            "
+            class="text-danger mb-2"
+          >
+            Invalid Number
+          </div>
+
           <div class="mb-2">
-            <input
-              formControlName="company"
-              name="company"
-              type="text"
-              class="form-control"
-              placeholder="Company"
-            />
+            <input type="radio" formControlName="gender" value="male" /> Male
+            <input type="radio" formControlName="gender" value="female" />
+            Female
+            <input type="radio" formControlName="gender" value="other" /> Other
+          </div>
+          <div
+            *ngIf="this.userForm.get('gender')?.value == '' && gender"
+            class="text-danger mb-2"
+          >
+            Select Any
           </div>
           <div class="mb-2">
-            <input
-              formControlName="title"
-              name="title"
-              type="text"
-              class="form-control"
-              placeholder="Title"
-            />
+            <span *ngFor="let skill of skillsSet">
+              <input
+                type="checkbox"
+                [value]="skill.name"
+                (change)="controlOnChange($event)"
+              />
+              {{ skill.name }}
+            </span>
           </div>
+          <div
+            *ngIf="
+              this.userForm.get('skills')?.touched &&
+              this.userForm.get('skills')?.errors
+            "
+            class="text-danger mb-2"
+          >
+            Select atleast one
+          </div>
+
           <div class="mb-2">
             <select
               formControlName="group"
@@ -63,8 +109,17 @@
               <option value="Colleague">Colleague</option>
             </select>
           </div>
+          <div
+            *ngIf="
+              this.userForm.get('group')?.touched &&
+              this.userForm.get('group')?.errors
+            "
+            class="text-danger mb-2"
+          >
+            Invalid Selection
+          </div>
           <div class="mb-2">
-            <button class="btn btn-success" (click)="addItem()">Submit</button>
+            <button class="btn btn-success" type="submit">Submit</button>
           </div>
         </form>
       </div>
@@ -75,9 +130,8 @@
               <th scope="col">Name</th>
               <th scope="col">Email</th>
               <th scope="col">Mobile</th>
-              <th scope="col">Company</th>
-              <th scope="col">Title</th>
               <th scope="col">Group</th>
+              <th scope="col">skills</th>
             </tr>
           </thead>
           <tbody>
@@ -85,9 +139,8 @@
               <td>{{ user.name }}</td>
               <td>{{ user.email }}</td>
               <td>{{ user.mobile }}</td>
-              <td>{{ user.company }}</td>
-              <td>{{ user.title }}</td>
               <td>{{ user.group }}</td>
+              <td>{{ user.skills }}</td>
             </tr>
           </tbody>
         </table>
